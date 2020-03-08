@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hupun.demo.dao.GoodsDao">
+    <insert id="addGoods">
+        insert into hp_goods(
+            gid,gno,gcode,gname,gprice,
+            gtradeprice,greferprice,
+            gweight,gvolume,statu
+        ) values(
+                 #{gid},#{gno},#{gcode},#{gname},#{gprice},
+                 #{gtradeprice},#{greferprice},
+                 #{gweight},#{gvolume},#{statu}
+        )
+    </insert>
+<!--    查看所有商品-->
+    <select id="findGoodsAll" resultType="com.hupun.demo.entity.HpGoods">
+        select gid,gno,gcode,gname,gprice,gtradeprice,greferprice,gweight,gvolume,statu from hp_goods
+    </select>
+<!--    查看对应条件的商品-->
+    <select id="findBySearchList" resultType="com.hupun.demo.entity.HpGoods">
+        select gid,gno,gcode,gname,gprice,gtradeprice,greferprice,gweight,gvolume,statu from hp_goods
+        where statu=#{statu}
+            <if test="gno != null and gno!=''">
+                and gno like concat(concat('%',#{gno}),'%')
+            </if>
+            <if test="gname != null and gname!=''">
+                and gname like concat(concat('%',#{gname}),'%')
+            </if>
+    </select>
+<!--    修改商品状态-->
+    <update id="updateGoodsStatu">
+        update hp_goods set statu=#{statu} where gid=#{gid}
+    </update>
+<!--    修改商品-->
+    <update id="changeGoods">
+        update hp_goods set gcode=#{gcode},gname=#{gname},gprice=#{gprice},
+               gtradeprice=#{gtradeprice},greferprice=#{greferprice},gweight=#{gweight},gvolume=#{gvolume}
+        where gid = #{gid}
+    </update>
+    <select id="getByGno" resultType="com.hupun.demo.entity.HpGoods">
+        select * from hp_goods where gno = #{gno}
+    </select>
+</mapper>

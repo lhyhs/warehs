@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hupun.demo.dao.StorehouseDao">
+
+    <select id="findAllStorehouse" resultType="Storehouse">
+        SELECT sth.*,s.name as sname,g.gname,g.gno,g.gcode,g.greferprice from hp_warehs as s,hp_whsauthority as st,hp_goods as g,hp_storehouse as sth ,hp_stuff as sf
+        where sth.sid=st.whid and st.whid = s.id and st.uid = sf.eid and sf.eid =#{eid} and g.gid=sth.gid
+
+    </select>
+    <select id="searchsh" resultType="Storehouse" parameterType="String">
+        SELECT sth.*,s.name as sname,g.gname,g.gno,g.gcode,g.greferprice from hp_warehs as s,hp_whsauthority as st,hp_goods as g,hp_storehouse as sth ,hp_stuff as sf
+        <where>
+            sth.sid=st.whid and st.whid = s.id and st.uid = sf.eid and sf.eid =#{eid} and g.gid=sth.gid
+            <if test="sid != null and sid != ''">
+                and sth.sid=#{sid}
+            </if>
+            <if test="gname != null and gname != ''">
+                and g.gname like "%"#{gname,jdbcType=VARCHAR}"%"
+            </if>
+        </where>
+
+
+    </select>
+    <select id="shdetial" resultType="Warehsow" parameterType="String">
+        select * from hp_warehsow where sid=#{sid} and gid=#{gid} ORDER BY iodate DESC
+    </select>
+    <select id="searchow" resultType="Warehsow" parameterType="String">
+        select * from hp_warehsow
+         <where>
+             sid=#{sid} and gid=#{gid}
+             <if test="sdate != null and sdate != ''">
+                 and iodate>=#{sdate}
+             </if>
+             <if test="edate != null and edate != ''">
+                 and iodate &lt;=#{edate}
+             </if>
+         </where>
+
+        ORDER BY iodate DESC
+    </select>
+
+
+</mapper>
+
+

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hupun.demo.dao.StuffDao">
+    <insert id="addStuff">
+        insert into
+            hp_stuff(
+                     eid,name,phone,
+                     password,remarks,
+                     emana,whcount,statu
+            ) values(
+                 #{eid},#{name},
+                 #{phone},#{password},
+                 #{remarks},#{emana},
+                 #{whcount},#{statu}
+            )
+    </insert>
+    <!-- 通过账号查询员工 -->
+    <select id="findByPhone" resultType="com.hupun.demo.entity.HpStuff">
+        select eid,name,phone,password,
+               remarks,emana,whcount,statu
+        from hp_stuff
+        where phone=#{phone}
+    </select>
+    <!-- 查询所有的员工列表 -->
+    <select id="findStuffList" resultType="com.hupun.demo.entity.HpStuff">
+        select eid,name,phone,password,
+               remarks,emana,whcount,statu
+        from hp_stuff
+        order by emana desc;
+    </select>
+    <!-- 通过条件查询员工列表 -->
+    <select id="findBySearchList" resultType="com.hupun.demo.entity.HpStuff">
+        select eid,name,phone,password,
+               remarks,emana,whcount,statu
+        from hp_stuff
+        <where>
+            <if test="phone != null and phone != ''">
+                and phone like concat(concat('%',#{phone}),'%')
+            </if>
+            <if test="name != null and name != ''">
+                and name like concat(concat('%',#{name}),'%')
+            </if>
+        </where>
+        order by emana desc;
+    </select>
+    <!-- 通过状态查询员工 -->
+    <select id="findStuffByStatu" resultType="com.hupun.demo.entity.HpStuff">
+        select eid,name,phone,password,
+               remarks,emana,whcount,statu
+        from hp_stuff
+        where statu=#{statu}
+        order by emana desc;
+    </select>
+    <!-- 修改员工状态 -->
+    <update id="changeStuffStatu">
+        update hp_stuff set statu=#{statu} where phone=#{phone}
+    </update>
+    <!-- 新增员工 -->
+    <insert id="insertStuff">
+        insert into hp_stuff(eid,name,phone,password,remarks,emana,whcount,statu)
+        values (#{eid},#{name},#{phone},#{password},#{remarks},#{emana},#{whcount},#{statu})
+    </insert>
+    <!-- 通过员工id查询选择的仓库 -->
+    <select id="getChoosedWhsList" resultType="com.hupun.demo.entity.Vo.FindStuffWhsVO">
+        select hw.name,hw.id
+        from hp_warehs hw,hp_whsauthority hwa
+        where hw.id=hwa.whid
+          and hwa.uid=#{eid}
+    </select>
+    <!-- 修改员工信息 -->
+    <update id="UpdateStuff">
+        update hp_stuff set name=#{name},password=#{password},remarks=#{remarks},whcount=#{whcount} where eid=#{eid}
+    </update>
+<!--    //添加仓库是whcount加一-->
+    <update id="updateWhcount">
+        update hp_stuff set whcount = whcount + 1 where emana = 1;
+    </update>
+    <!-- 通过权限状态查询员工 -->
+    <select id="findStuffByEmana" resultType="com.hupun.demo.entity.HpStuff">
+        select eid,name,phone,password,
+               remarks,emana,whcount,statu
+        from hp_stuff
+        where emana=#{emana}
+    </select>
+
+
+</mapper>

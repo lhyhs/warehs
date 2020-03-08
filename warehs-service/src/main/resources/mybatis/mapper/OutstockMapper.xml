@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hupun.demo.dao.OutstockDao">
+
+
+    <select id="findAllOut" resultType="Outstock">
+        select
+               outs.*,s.name as sname
+        from hp_outstock as outs,hp_whsauthority as st ,hp_warehs as s ,hp_stuff as sf
+        where outs.sid=st.whid and st.whid = s.id and st.uid = sf.eid and sf.eid = #{eid}
+
+    </select>
+    <select id="outdetial" resultType="Inoutdetial" parameterType="String">
+        select ino.ioid,ino.iotype,ino.iocode,g.gno,g.gname,ino.ionumb,ino.iopri,ino.iodnote from hp_inoutdetial as ino,hp_goods as g where ino.gid=g.gid and ino.iotype=0 and ino.iocode=#{id}
+
+    </select>
+    <select id="searchout" resultType="Outstock">
+        select
+        outs.*,s.name as sname
+        from hp_outstock as outs,hp_whsauthority as st ,hp_warehs as s ,hp_stuff as sf
+        <where>
+            outs.sid=st.whid and st.whid = s.id and st.uid = sf.eid and sf.eid = #{eid}
+            <if test="sdate != null and sdate != ''">
+                and outs.outdate>=#{sdate}
+            </if>
+            <if test="edate != null and edate != ''">
+                and outs.outdate &lt;=#{edate}
+            </if>
+            <if test="note != null and note != ''">
+                and outs.outnote like "%"#{note,jdbcType=VARCHAR}"%"
+            </if>
+            <if test="code != null and code != ''">
+                and outs.outcode like "%"#{code,jdbcType=VARCHAR}"%"
+            </if>
+            <if test="sid != null and sid != ''">
+                and outs.sid=#{sid}
+            </if>
+        </where>
+        ORDER BY outs.outdate DESC
+
+    </select>
+    <insert id="addout" parameterType="Outstock">
+        insert into hp_outstock(outid,outcode,sid,outnumb,outpri,outnote,outdate,outrecname,outrectel,outrecaddr) VALUES(#{outid},#{outcode},#{sid},#{outnumb},#{outpri},#{outnote},#{outdate},#{outrecname},#{outrectel},#{outrecaddr});
+    </insert>
+    <insert id="addoutd" parameterType="Inoutdetial">
+        insert into hp_inoutdetial(ioid,iotype,iocode,gid,ionumb,iopri,iodnote) VALUES(#{ioid},#{iotype},#{iocode},#{gid},#{ionumb},#{iopri},#{iodnote})
+    </insert>
+    <select id="findsh" resultType="Storehouse">
+        SELECT * from hp_storehouse where sid=#{sid} and gid = #{gid}
+    </select>
+    <insert id="addsh" parameterType="Storehouse">
+        insert into hp_storehouse(shid,sid,gid,shnumb,shpri,shavgpri) VALUES(#{shid},#{sid},#{gid},#{shnumb},#{shpri},#{shavgpri})
+    </insert>
+    <update id="updatesh">
+        UPDATE hp_storehouse SET shnumb=#{shnumb}, shpri=#{shpri},shavgpri=#{shavgpri} where sid=#{sid} and gid=#{gid}
+    </update>
+    <insert id="addow" parameterType="Warehsow">
+        insert into hp_warehsow(wowid,iotype,iocode,gid,sid,ionumb,iopri,shnumb,shpri,iodate) VALUES(#{wowid},#{iotype},#{iocode},#{gid},#{sid},#{ionumb},#{iopri},#{shnumb},#{shpri},#{iodate})
+    </insert>
+
+
+</mapper>
+
+

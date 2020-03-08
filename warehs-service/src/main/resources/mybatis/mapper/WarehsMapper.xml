@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hupun.demo.dao.WarehsDao">
+
+    <select id="findById" resultType="com.hupun.demo.entity.HpWarehs" parameterType="int">
+        select id,code,name,contacts,phone,statu,address from warehs where sno=#{sno};
+    </select>
+    <select id="findAll" resultType="com.hupun.demo.entity.HpWarehs">
+        select id,code,name,contacts,phone,address,statu from hp_warehs;
+
+    </select>
+
+    <insert id="addWarehs">
+        INSERT INTO
+            hp_warehs(
+                   id,code,
+                   name,contacts,
+                   phone,address,
+                   statu
+                   )
+        VALUES(
+               #{id},#{code},
+               #{name},#{contacts},
+               #{phone},#{address},
+               #{statu}
+               );
+    </insert>
+<!--    //查询员工管理的仓库-->
+    <select id="showWarehsList" resultType="com.hupun.demo.entity.HpWarehs">
+        select hw.id,hw.code,hw.name,hw.contacts,hw.phone,hw.address,hw.statu
+        from hp_warehs hw,hp_whsauthority hwa,hp_stuff hs
+        where hwa.whid = hw.id
+          and hwa.uid = hs.eid
+          and hs.eid = #{eid}
+    </select>
+    <!-- 查看对应员工的对应 -->
+    <select id="findWhsSearchList" resultType="com.hupun.demo.entity.HpWarehs">
+        select hw.id,hw.code,hw.name,hw.contacts,hw.phone,hw.address,hw.statu
+        from hp_warehs hw,hp_whsauthority hwa,hp_stuff hs
+        WHERE hwa.whid = hw.id
+          and hwa.uid = hs.eid
+          and hs.eid = #{eid}
+          and hw.statu = #{statu}
+          <if test="code != null and code != ''">
+                and hw.code like concat(concat('%',#{code}),'%')
+          </if>
+          <if test="name != null and name != ''">
+                and hw.name like concat(concat('%',#{name}),'%')
+          </if>
+    <!-- 修改仓库状态 -->
+    </select>
+    <update id="updateWhsStatu">
+        update hp_warehs set statu=#{statu} where id=#{id}
+    </update>
+<!--    修改仓库信息-->
+    <update id="updateWhsByid">
+        update hp_warehs set name=#{name},contacts=#{contacts},phone=#{phone},address=#{address} where id=#{id}
+    </update>
+<!--    判断仓库编码是否已经存在-->
+    <select id="getByCode" resultType="com.hupun.demo.entity.HpWarehs">
+        select * from hp_warehs where code = #{code}
+    </select>
+
+</mapper>
+
+

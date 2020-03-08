@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hupun.demo.dao.MenuAuthorityDao">
+<!--    根据用户id找到对应的菜单权限-->
+    <select id="findMenuByStuffId" resultType="com.hupun.demo.entity.MenuAuthority">
+        select id,number from hp_menuauthority where uid=#{eid}
+    </select>
+    <!-- 给对应的员工添加菜单权限-->
+    <insert id="addMenuAuthority">
+        insert into hp_menuauthority(id,number,uid) values (#{id},#{number},#{uid})
+    </insert>
+    <!--    根据用户id找到对应的菜单权限-->
+    <select id="getChoosedWhsList" resultType="com.hupun.demo.entity.Vo.FindStuffMenuVO">
+        select number from hp_menuauthority where uid=#{eid}
+    </select>
+    <!-- 删除对应的菜单权限 -->
+    <delete id="deleteMenu">
+        delete from hp_menuauthority where uid=#{eid}
+    </delete>
+
+</mapper>

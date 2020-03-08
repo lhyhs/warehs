@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hupun.demo.dao.WhsAuthorityDao">
+    <!-- 插入员工对应的权限 -->
+    <insert id="addWhsAuthority">
+        insert into hp_whsauthority(id,whid,uid)
+        values (#{id},#{whid},#{uid});
+    </insert>
+    <!-- 删除员工对应的仓库权限 -->
+    <delete id="deleteWhs">
+        delete from hp_whsauthority where uid=#{eid}
+    </delete>
+<!--    添加仓库时给管理员分配仓库权限-->
+    <insert id="addWhsAuthorityByEmana">
+        insert into hp_whsauthority(id,whid,uid) values(#{id},#{whid},#{uid});
+    </insert>
+
+</mapper>

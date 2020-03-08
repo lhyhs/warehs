@@ -1,0 +1,20 @@
+server:
+  port: 8010
+spring:
+   application:
+    name: microservicecloud-web-client
+
+feign:
+  hystrix:
+    enabled: false
+  httpclient:
+    enabled: true
+
+eureka:
+  instance:
+      instance-id: web-80.com
+  client:
+
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/
+
